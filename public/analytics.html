@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Analis Web React by Bily</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#1A1410">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F6EFE6;
+    --cream-deep: #E8D9C5;
+    --cream-line: #D9C4A8;
+    --brown: #7A5238;
+    --brown-dark: #3B2A1E;
+    --black: #1A1410;
+    --white: #FFFFFF;
+    --ok: #5BE08E;
+    --bad: #FF7B72;
+    --bad-text: #C2332B;
+    --font: "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    min-height: 100vh; min-height: 100dvh;
+    font-family: var(--font);
+    color: var(--black);
+    background-color: var(--cream);
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(59,42,30,.10) 1px, transparent 0),
+      radial-gradient(circle at 12px 14px, rgba(59,42,30,.06) 2px, transparent 0);
+    background-size: 24px 24px, 36px 36px;
+    padding: max(20px, env(safe-area-inset-top)) 16px max(28px, env(safe-area-inset-bottom));
+    display: flex; justify-content: center;
+  }
+  main { width: 100%; max-width: 560px; }
+  [hidden] { display: none !important; }
+
+  .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-top: 18px; }
+  h1 { font-size: clamp(28px, 7.5vw, 38px); line-height: 1.05; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 8px; }
+  .lead { margin: 0 0 22px; font-size: 15px; line-height: 1.45; color: var(--brown); }
+
+  .btn {
+    font: inherit; font-weight: 600; font-size: 14px;
+    color: var(--brown-dark); background: var(--cream-deep);
+    border: 0; border-radius: 12px; padding: 9px 14px; cursor: pointer;
+  }
+  .btn:hover { background: var(--cream-line); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+  .btn.dark { background: var(--black); color: #fff; font-weight: 800; font-size: 16px; padding: 14px 18px; border-radius: 14px; width: 100%; }
+  .btn.dark:hover { background: var(--brown-dark); }
+  .btn.danger { background: #F3D6D2; color: var(--bad-text); }
+  .btn.danger:hover { background: #EEC4BE; }
+  .btn:focus-visible, input:focus-visible { outline: 3px solid var(--brown); outline-offset: 2px; }
+
+  .bubble {
+    background: var(--white);
+    border-radius: 18px; border-top-left-radius: 4px;
+    padding: 16px; margin-bottom: 14px;
+    box-shadow: 0 1px 0 rgba(59,42,30,.15);
+  }
+  .bubble.out { background: var(--cream-deep); border-top-left-radius: 18px; border-top-right-radius: 4px; }
+
+  /* login */
+  label.field { display: block; font-weight: 600; font-size: 14px; margin: 12px 0 6px; }
+  label.field:first-of-type { margin-top: 0; }
+  input {
+    width: 100%; font: inherit; font-size: 16px; color: var(--black);
+    background: var(--cream); border: 2px solid transparent; border-radius: 12px; padding: 12px 14px; outline: none;
+  }
+  .msg { margin: 10px 2px 0; font-size: 14px; min-height: 18px; color: var(--brown); }
+  .msg.bad { color: var(--bad-text); }
+  #login .btn.dark { margin-top: 14px; }
+
+  /* counter */
+  .counter-label { font-weight: 600; font-size: 15px; color: var(--brown-dark); }
+  .counter-num { font-size: clamp(52px, 16vw, 76px); font-weight: 800; line-height: 1; letter-spacing: -0.03em; margin: 6px 0 12px; font-variant-numeric: tabular-nums; }
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip { font-size: 13px; font-weight: 600; background: var(--white); border-radius: 99px; padding: 5px 12px; }
+  .chip b { font-variant-numeric: tabular-nums; }
+
+  /* status */
+  .list-head { display: flex; justify-content: space-between; align-items: center; margin: 22px 0 10px; gap: 10px; }
+  .list-head h2 { margin: 0; font-size: 20px; font-weight: 800; letter-spacing: -0.01em; }
+  .list-sub { font-size: 13px; color: var(--brown); font-weight: 400; }
+  .empty { text-align: center; color: var(--brown); font-size: 15px; padding: 26px 10px; border: 2px dashed var(--cream-line); border-radius: 16px; }
+
+  .entry { background: var(--black); border-radius: 16px; overflow: hidden; margin-bottom: 12px; }
+  .entry-head {
+    display: flex; align-items: center; gap: 8px;
+    padding: 9px 10px 9px 14px;
+    background: #261D17; color: #CDBBA8;
+    font-family: var(--mono); font-size: 12px;
+  }
+  .entry-head .route { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .badge { font-family: var(--font); font-weight: 800; font-size: 12px; padding: 3px 10px; border-radius: 99px; color: var(--black); }
+  .badge.ok { background: var(--ok); }
+  .badge.bad { background: var(--bad); }
+  .del {
+    font: inherit; font-family: var(--font); font-weight: 600; font-size: 12px;
+    color: #F6EFE6; background: rgba(246,239,230,.12);
+    border: 0; border-radius: 8px; padding: 5px 10px; cursor: pointer;
+  }
+  .del:hover { background: rgba(255,123,114,.3); }
+  .del:focus-visible { outline: 2px solid var(--cream); outline-offset: 2px; }
+  pre.code {
+    margin: 0; padding: 14px; overflow-x: auto;
+    font-family: var(--mono); font-size: 13px; line-height: 1.65; color: #EADBC8;
+    tab-size: 2;
+  }
+  .ln { display: block; white-space: pre; }
+  .k { color: #E5B98A; }
+  .s { color: #9BD6A5; }
+  .n { color: #F2B84B; }
+  .t { color: var(--ok); }
+  .f { color: var(--bad); }
+  .p { color: #8B7B6C; }
+
+  footer { margin-top: 22px; text-align: center; font-size: 13px; color: var(--brown); }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<main>
+  <div class="top">
+    <div>
+      <h1>Analis Web React by Bily</h1>
+      <p class="lead">Pantau setiap klik kirim react dari web utama.</p>
+    </div>
+    <button type="button" class="btn" id="logout" hidden>Keluar</button>
+  </div>
+
+  <!-- login admin -->
+  <section class="bubble" id="login" hidden>
+    <form id="login-form" novalidate>
+      <label class="field" for="email">Email admin</label>
+      <input id="email" type="email" autocomplete="username" inputmode="email" required>
+      <label class="field" for="pass">Password</label>
+      <input id="pass" type="password" autocomplete="current-password" required>
+      <button type="submit" class="btn dark" id="login-btn">Masuk</button>
+      <p class="msg" id="login-msg" role="status"></p>
+    </form>
+  </section>
+
+  <!-- dashboard -->
+  <div id="app" hidden>
+    <section class="bubble out" aria-live="polite">
+      <div class="counter-label">Jumlah klik kirim react</div>
+      <div class="counter-num" id="total">0</div>
+      <div class="chips">
+        <span class="chip">Terkirim <b id="ok-count">0</b></span>
+        <span class="chip">Error <b id="err-count">0</b></span>
+      </div>
+    </section>
+
+    <div class="list-head">
+      <div>
+        <h2>Status</h2>
+        <div class="list-sub" id="list-sub">Memuat…</div>
+      </div>
+      <button type="button" class="btn danger" id="clear-all" disabled>Hapus semua</button>
+    </div>
+    <p class="msg" id="app-msg" role="status"></p>
+    <div id="list"></div>
+  </div>
+
+  <footer>Copyright by Bily Engineer Website</footer>
+</main>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut }
+    from "https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js";
+  import { getFirestore, collection, doc, query, orderBy, limit, onSnapshot, deleteDoc, getDocs, writeBatch }
+    from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBOgk0o7Ptab9gytLmUSAZMsD-_QIMC7eg",
+    authDomain: "bilywebract.firebaseapp.com",
+    projectId: "bilywebract",
+    storageBucket: "bilywebract.firebasestorage.app",
+    messagingSenderId: "163485010607",
+    appId: "1:163485010607:web:8a698de2109a9740d4625a",
+    measurementId: "G-84TLE5ZBSX"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  const LIMIT = 50;
+  const $ = (id) => document.getElementById(id);
+  const fmt = (n) => Number(n || 0).toLocaleString('id-ID');
+
+  let unsubLogs = null;
+  let unsubStats = null;
+
+  /* ---------- login ---------- */
+  $('login-form').addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    const msg = $('login-msg');
+    msg.className = 'msg'; msg.textContent = '';
+    const email = $('email').value.trim();
+    const pass = $('pass').value;
+    if (!email || !pass) { msg.className = 'msg bad'; msg.textContent = 'Isi email dan password.'; return; }
+    $('login-btn').disabled = true;
+    try {
+      await signInWithEmailAndPassword(auth, email, pass);
+    } catch (e) {
+      const code = e && e.code || '';
+      msg.className = 'msg bad';
+      msg.textContent =
+        code === 'auth/invalid-credential' || code === 'auth/wrong-password' || code === 'auth/user-not-found'
+          ? 'Email atau password salah.'
+          : code === 'auth/too-many-requests' ? 'Terlalu banyak percobaan. Tunggu sebentar.'
+          : code === 'auth/operation-not-allowed' ? 'Login Email/Password belum diaktifkan di Firebase.'
+          : 'Gagal masuk. Coba lagi.';
+    } finally {
+      $('login-btn').disabled = false;
+    }
+  });
+  $('logout').addEventListener('click', () => signOut(auth));
+
+  onAuthStateChanged(auth, (user) => {
+    stopListening();
+    if (user) {
+      $('login').hidden = true;
+      $('app').hidden = false;
+      $('logout').hidden = false;
+      startListening();
+    } else {
+      $('login').hidden = false;
+      $('app').hidden = true;
+      $('logout').hidden = true;
+      $('list').textContent = '';
+    }
+  });
+
+  function stopListening() {
+    if (unsubLogs) { unsubLogs(); unsubLogs = null; }
+    if (unsubStats) { unsubStats(); unsubStats = null; }
+  }
+
+  function showAppError(e) {
+    const m = $('app-msg');
+    m.className = 'msg bad';
+    m.textContent = e && e.code === 'permission-denied'
+      ? 'Akun ini ditolak oleh Firestore Rules. Pastikan email admin di rules sama dengan email yang dipakai login.'
+      : 'Terjadi kesalahan: ' + (e && e.message ? e.message : e);
+    $('list-sub').textContent = '';
+  }
+
+  function startListening() {
+    $('app-msg').textContent = '';
+
+    unsubStats = onSnapshot(doc(db, 'stats', 'global'), (snap) => {
+      const d = snap.exists() ? snap.data() : {};
+      $('total').textContent = fmt(d.totalClicks);
+      $('ok-count').textContent = fmt(d.totalSuccess);
+      $('err-count').textContent = fmt(d.totalError);
+    }, showAppError);
+
+    const q = query(collection(db, 'logs'), orderBy('createdAt', 'desc'), limit(LIMIT));
+    unsubLogs = onSnapshot(q, (snap) => {
+      $('app-msg').textContent = '';
+      renderList(snap.docs);
+    }, showAppError);
+  }
+
+  /* ---------- render kotak kode ---------- */
+  function sp(cls, text) {
+    const s = document.createElement('span');
+    if (cls) s.className = cls;
+    s.textContent = text;
+    return s;
+  }
+  function ln(...nodes) {
+    const d = document.createElement('span');
+    d.className = 'ln';
+    nodes.forEach((n) => d.appendChild(typeof n === 'string' ? document.createTextNode(n) : n));
+    return d;
+  }
+  function prop(key, valueNode, comma) {
+    return ln('  ', sp('k', '"' + key + '"'), sp('p', ': '), valueNode, sp('p', comma ? ',' : ''));
+  }
+  function timeText(ts) {
+    if (!ts || typeof ts.toDate !== 'function') return 'baru saja';
+    return ts.toDate().toLocaleString('id-ID', {
+      day: '2-digit', month: 'short', year: 'numeric',
+      hour: '2-digit', minute: '2-digit', second: '2-digit'
+    });
+  }
+
+  function buildEntry(docSnap) {
+    const d = docSnap.data();
+    const ok = d.status === true;
+
+    const art = document.createElement('article');
+    art.className = 'entry';
+
+    const head = document.createElement('div');
+    head.className = 'entry-head';
+    head.appendChild(sp('route', 'POST /api/react'));
+    head.appendChild(sp('badge ' + (ok ? 'ok' : 'bad'), ok ? 'terkirim' : 'error'));
+    const del = document.createElement('button');
+    del.type = 'button';
+    del.className = 'del';
+    del.textContent = 'Hapus';
+    del.setAttribute('aria-label', 'Hapus status ini');
+    del.addEventListener('click', async () => {
+      del.disabled = true;
+      try { await deleteDoc(docSnap.ref); } catch (e) { del.disabled = false; showAppError(e); }
+    });
+    head.appendChild(del);
+    art.appendChild(head);
+
+    const pre = document.createElement('pre');
+    pre.className = 'code';
+
+    const emojis = Array.isArray(d.emojis) ? d.emojis : [];
+    const emojiNode = document.createElement('span');
+    emojiNode.appendChild(sp('p', '['));
+    emojis.forEach((e, i) => {
+      emojiNode.appendChild(sp('s', '"' + e + '"'));
+      if (i < emojis.length - 1) emojiNode.appendChild(sp('p', ', '));
+    });
+    emojiNode.appendChild(sp('p', ']'));
+
+    const hasMsg = typeof d.message === 'string' && d.message;
+    pre.appendChild(ln(sp('p', '{')));
+    pre.appendChild(prop('status', sp(ok ? 't' : 'f', String(ok)), true));
+    pre.appendChild(prop('result', sp('s', '"' + (d.result || '') + '"'), true));
+    pre.appendChild(prop('ms', sp('n', String(d.ms ?? 0)), true));
+    pre.appendChild(prop('emojis', emojiNode, true));
+    pre.appendChild(prop('emojiCount', sp('n', String(d.emojiCount ?? emojis.length)), true));
+    if (hasMsg) pre.appendChild(prop('message', sp('s', JSON.stringify(d.message)), true));
+    pre.appendChild(prop('time', sp('s', '"' + timeText(d.createdAt) + '"'), false));
+    pre.appendChild(ln(sp('p', '}')));
+    art.appendChild(pre);
+    return art;
+  }
+
+  function renderList(docs) {
+    const list = $('list');
+    list.textContent = '';
+    $('clear-all').disabled = docs.length === 0;
+
+    if (!docs.length) {
+      const e = document.createElement('div');
+      e.className = 'empty';
+      e.textContent = 'Belum ada status. Kirim react dari web utama, nanti muncul di sini.';
+      list.appendChild(e);
+      $('list-sub').textContent = 'Kosong';
+      return;
+    }
+    docs.forEach((d) => list.appendChild(buildEntry(d)));
+    $('list-sub').textContent = 'Menampilkan ' + docs.length + ' status terbaru';
+  }
+
+  /* ---------- hapus semua status (angka total tetap) ---------- */
+  $('clear-all').addEventListener('click', async () => {
+    if (!confirm('Hapus semua status? Angka jumlah klik tetap tersimpan.')) return;
+    const btn = $('clear-all');
+    btn.disabled = true;
+    btn.textContent = 'Menghapus…';
+    try {
+      for (;;) {
+        const snap = await getDocs(query(collection(db, 'logs'), limit(400)));
+        if (snap.empty) break;
+        const batch = writeBatch(db);
+        snap.docs.forEach((d) => batch.delete(d.ref));
+        await batch.commit();
+        if (snap.size < 400) break;
+      }
+    } catch (e) {
+      showAppError(e);
+    } finally {
+      btn.textContent = 'Hapus semua';
+    }
+  });
+</script>
+</body>
+</html>
