@@ -1,0 +1,17 @@
+{
+  "name": "react-channel-wa",
+  "version": "1.0.0",
+  "description": "Kirim reaksi emoji ke postingan Saluran WhatsApp (siap deploy di Vercel)",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "dev": "vercel dev",
+    "start": "vercel dev"
+  },
+  "dependencies": {
+    "axios": "^1.7.9"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
